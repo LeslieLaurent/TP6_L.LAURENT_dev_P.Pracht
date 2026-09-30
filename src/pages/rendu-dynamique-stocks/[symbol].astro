@@ -1,0 +1,62 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import PlotFigure from "../../components/PlotFigure.astro";
+import * as Plot from "@observablehq/plot";
+import stocksCsv from "../../assets/stocks.csv?raw";
+
+export const prerender = false;
+
+const stocks = stocksCsv
+  .trim()
+  .split(/\r?\n/)
+  .slice(1)
+  .map((line) => {
+    const [symbol, date, price] = line.split(",");
+    return { symbol: symbol.trim(), date: new Date(date.trim()), price: Number(price.trim()) };
+  })
+  .filter((stock) => stock.symbol && !Number.isNaN(stock.date.getTime()) && Number.isFinite(stock.price));
+
+const { symbol } = Astro.params;
+const selectedSymbol = (symbol ?? "").toUpperCase();
+const filteredStocks = stocks.filter((stock) => stock.symbol === selectedSymbol);
+
+if (!filteredStocks.length) {
+  return Astro.redirect("/rendu-dynamique-stocks/");
+}
+
+const plotOptions = {
+  height: 520,
+  grid: true,
+  style: { background: "transparent", color: "#fff8f5" },
+  x: { label: "Date" },
+  y: { label: "Prix" },
+  marks: [
+    Plot.line(filteredStocks, {
+      x: "date",
+      y: "price",
+      stroke: "#7ee0c3",
+      strokeWidth: 2.5
+    }),
+    Plot.dot(filteredStocks, {
+      x: "date",
+      y: "price",
+      fill: "#7ee0c3",
+      r: 3
+    })
+  ]
+};
+---
+
+<Layout title={`${selectedSymbol} — Rendu dynamique`}>
+  <main class="mx-auto max-w-6xl px-6 py-12 lg:py-16">
+    <a href="/rendu-dynamique-stocks/" class="text-sm font-bold text-[#7ee0c3]">← Toutes les entreprises</a>
+    <header class="py-16">
+      <p class="mb-4 text-xs font-bold uppercase tracking-[0.22em] text-[#7ee0c3]">Rendu dynamique</p>
+      <h1 class="text-5xl font-bold text-[#fff8f5] md:text-7xl">{selectedSymbol}</h1>
+      <p class="mt-5 text-lg text-[#e6d6da]">{filteredStocks.length} point(s) de données pour cette entreprise.</p>
+    </header>
+    <div class="overflow-hidden rounded-2xl border border-[#35584f] bg-[#11241f] p-5">
+      <PlotFigure options={plotOptions} />
+    </div>
+  </main>
+</Layout>

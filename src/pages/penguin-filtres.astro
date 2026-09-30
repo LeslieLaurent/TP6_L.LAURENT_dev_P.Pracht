@@ -1,0 +1,476 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Penguins avec plusieurs filtres">
+
+  <main class="mx-auto max-w-7xl px-6 py-12 lg:px-12 lg:py-16">
+
+    <a
+      href="/"
+      class="inline-block text-sm font-bold
+             text-[#ff9bb2]
+             transition hover:text-[#ffd4de]"
+    >
+      ← Retour à l'accueil
+    </a>
+
+
+    <header class="max-w-4xl pt-16 pb-12">
+
+      <p
+        class="mb-4 text-xs font-bold uppercase
+               tracking-[0.22em] text-[#ff9bb2]"
+      >
+        Essai 04 — Plusieurs filtres
+      </p>
+
+      <h1
+        class="text-5xl font-bold
+               leading-tight tracking-[-0.03em]
+               text-[#fff8f5]
+               md:text-7xl"
+      >
+        Penguins
+      </h1>
+
+      <p
+        class="mt-5 max-w-2xl
+               text-lg leading-8
+               text-[#e4d7db]"
+      >
+        Explore les dimensions du bec des manchots
+        selon leur espèce, leur île et leur sexe.
+      </p>
+
+    </header>
+
+
+    <section
+      class="border-y border-[#57343f]
+             py-7"
+    >
+
+      <div
+        class="grid gap-6
+               md:grid-cols-2
+               lg:grid-cols-[1fr_1fr_1fr_auto]
+               lg:items-end"
+      >
+
+        <div>
+
+          <label
+            for="species"
+            class="mb-2 block
+                   text-xs font-bold uppercase
+                   tracking-[0.15em]
+                   text-[#cbb8be]"
+          >
+            Espèce
+          </label>
+
+          <select
+            id="species"
+            class="w-full rounded-lg
+                   border border-[#80505e]
+                   bg-[#1d1217]
+                   px-4 py-3
+                   text-[#fff8f5]
+                   transition
+                   hover:border-[#ff9bb2]
+                   focus:border-[#ff9bb2]"
+          >
+            <option value="">
+              Toutes les espèces
+            </option>
+
+            <option value="Adelie">
+              Adelie
+            </option>
+
+            <option value="Chinstrap">
+              Chinstrap
+            </option>
+
+            <option value="Gentoo">
+              Gentoo
+            </option>
+          </select>
+
+        </div>
+
+
+        <div>
+
+          <label
+            for="island"
+            class="mb-2 block
+                   text-xs font-bold uppercase
+                   tracking-[0.15em]
+                   text-[#cbb8be]"
+          >
+            Île
+          </label>
+
+          <select
+            id="island"
+            class="w-full rounded-lg
+                   border border-[#80505e]
+                   bg-[#1d1217]
+                   px-4 py-3
+                   text-[#fff8f5]
+                   transition
+                   hover:border-[#ff9bb2]
+                   focus:border-[#ff9bb2]"
+          >
+            <option value="">
+              Toutes les îles
+            </option>
+
+            <option value="Biscoe">
+              Biscoe
+            </option>
+
+            <option value="Dream">
+              Dream
+            </option>
+
+            <option value="Torgersen">
+              Torgersen
+            </option>
+          </select>
+
+        </div>
+
+
+        <div>
+
+          <label
+            for="sex"
+            class="mb-2 block
+                   text-xs font-bold uppercase
+                   tracking-[0.15em]
+                   text-[#cbb8be]"
+          >
+            Sexe
+          </label>
+
+          <select
+            id="sex"
+            class="w-full rounded-lg
+                   border border-[#80505e]
+                   bg-[#1d1217]
+                   px-4 py-3
+                   text-[#fff8f5]
+                   transition
+                   hover:border-[#ff9bb2]
+                   focus:border-[#ff9bb2]"
+          >
+            <option value="">
+              Tous
+            </option>
+
+            <option value="MALE">
+              Mâle
+            </option>
+
+            <option value="FEMALE">
+              Femelle
+            </option>
+          </select>
+
+        </div>
+
+
+        <div
+          class="border-l-0 border-[#57343f]
+                 lg:border-l lg:pl-8"
+        >
+
+          <p
+            class="text-xs font-bold uppercase
+                   tracking-[0.15em]
+                   text-[#cbb8be]"
+          >
+            Résultats
+          </p>
+
+          <p
+            id="result-count"
+            class="mt-1 text-3xl font-bold
+                   text-[#ff9bb2]"
+            aria-live="polite"
+          >
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="pt-12">
+
+      <div
+        class="mb-6 flex flex-col gap-3
+               md:flex-row
+               md:items-end
+               md:justify-between"
+      >
+
+        <div>
+
+          <p
+            class="text-xs font-bold uppercase
+                   tracking-[0.18em]
+                   text-[#ff9bb2]"
+          >
+            Visualisation
+          </p>
+
+          <h2
+            class="mt-2 text-2xl font-bold
+                   text-[#fff8f5]"
+          >
+            Longueur et profondeur du bec
+          </h2>
+
+        </div>
+
+        <p
+          class="max-w-sm text-sm
+                 leading-6 text-[#cbb8be]"
+        >
+          Chaque point représente un manchot.
+          La couleur correspond à son espèce.
+        </p>
+
+      </div>
+
+
+      <div
+        class="overflow-hidden
+               rounded-xl
+               bg-[#f7f2ef]
+               p-4
+               md:p-8"
+      >
+
+        <div
+          id="plot"
+          class="overflow-x-auto"
+        >
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <script>
+    import * as Plot from "@observablehq/plot";
+    import penguins from "../assets/penguins.json";
+
+    const selectSpecies =
+      document.querySelector<HTMLSelectElement>(
+        "#species"
+      );
+
+    const selectIsland =
+      document.querySelector<HTMLSelectElement>(
+        "#island"
+      );
+
+    const selectSex =
+      document.querySelector<HTMLSelectElement>(
+        "#sex"
+      );
+
+    const div =
+      document.querySelector<HTMLElement>(
+        "#plot"
+      );
+
+    const resultCount =
+      document.querySelector<HTMLElement>(
+        "#result-count"
+      );
+
+
+    function renderPlot() {
+
+      if (
+        !selectSpecies ||
+        !selectIsland ||
+        !selectSex ||
+        !div
+      ) {
+        return;
+      }
+
+
+      const species =
+        selectSpecies.value;
+
+      const island =
+        selectIsland.value;
+
+      const sex =
+        selectSex.value;
+
+
+      const filteredPenguins =
+        penguins.filter(
+          (penguin) =>
+            (
+              species === "" ||
+              penguin.species === species
+            ) &&
+            (
+              island === "" ||
+              penguin.island === island
+            ) &&
+            (
+              sex === "" ||
+              penguin.sex === sex
+            )
+        );
+
+
+      if (resultCount) {
+        resultCount.innerText =
+          filteredPenguins.length.toString();
+      }
+
+
+      div.innerHTML = "";
+
+
+      const width =
+        Math.max(
+          700,
+          Math.min(
+            1100,
+            div.clientWidth
+          )
+        );
+
+
+      const plot =
+        Plot.plot({
+
+          width,
+
+          height: 520,
+
+          marginTop: 40,
+          marginRight: 40,
+          marginBottom: 65,
+          marginLeft: 75,
+
+          style: {
+            background: "transparent",
+            color: "#24171c",
+            fontSize: "13px"
+          },
+
+          color: {
+            domain: [
+              "Adelie",
+              "Chinstrap",
+              "Gentoo"
+            ],
+
+            range: [
+              "#3159b7",
+              "#c27a00",
+              "#c94d64"
+            ],
+
+            legend: true
+          },
+
+          x: {
+            label: "Longueur du bec (mm)",
+            grid: true,
+            nice: true
+          },
+
+          y: {
+            label: "Profondeur du bec (mm)",
+            grid: true,
+            nice: true
+          },
+
+          marks: [
+
+            Plot.dot(
+              penguins,
+              {
+                filter: (penguin) =>
+                  (
+                    species === "" ||
+                    penguin.species === species
+                  ) &&
+                  (
+                    island === "" ||
+                    penguin.island === island
+                  ) &&
+                  (
+                    sex === "" ||
+                    penguin.sex === sex
+                  ),
+
+                x: "culmen_length_mm",
+
+                y: "culmen_depth_mm",
+
+                fill: "species",
+
+                stroke: "#ffffff",
+
+                strokeWidth: 1.2,
+
+                r: 6,
+
+                opacity: 0.95,
+
+                title: (penguin) =>
+                  `${penguin.species} · ${penguin.island}`
+              }
+            )
+
+          ]
+
+        });
+
+
+      div.append(plot);
+
+    }
+
+
+    selectSpecies?.addEventListener(
+      "change",
+      renderPlot
+    );
+
+    selectIsland?.addEventListener(
+      "change",
+      renderPlot
+    );
+
+    selectSex?.addEventListener(
+      "change",
+      renderPlot
+    );
+
+
+    renderPlot();
+  </script>
+
+</Layout>

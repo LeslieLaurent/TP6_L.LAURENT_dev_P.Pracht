@@ -1,0 +1,41 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import stocksCsv from "../../assets/stocks.csv?raw";
+
+const stocks = stocksCsv
+  .trim()
+  .split(/\r?\n/)
+  .slice(1)
+  .map((line) => {
+    const [symbol, date, price] = line.split(",");
+    return { symbol: symbol.trim(), date: new Date(date.trim()), price: Number(price.trim()) };
+  })
+  .filter((stock) => stock.symbol && !Number.isNaN(stock.date.getTime()) && Number.isFinite(stock.price));
+
+const symbols = [...new Set(stocks.map((stock) => stock.symbol))].sort();
+---
+
+<Layout title="Stocks — Rendu dynamique">
+  <main class="mx-auto max-w-5xl px-6 py-12 lg:py-16">
+    <a href="/" class="text-sm font-bold text-[#7ee0c3] transition hover:text-[#b8f4e3]">← Retour à l'accueil</a>
+
+    <header class="py-16">
+      <p class="mb-4 text-xs font-bold uppercase tracking-[0.22em] text-[#7ee0c3]">Routes paramétriques</p>
+      <h1 class="text-5xl font-bold text-[#fff8f5] md:text-7xl">Stocks — rendu dynamique</h1>
+      <p class="mt-5 max-w-2xl text-lg leading-8 text-[#e6d6da]">
+        Choisis une entreprise : sa page est rendue à la demande avec <code>Astro.params</code>.
+      </p>
+    </header>
+
+    <ul class="grid gap-4 sm:grid-cols-3">
+      {symbols.map((symbol) => (
+        <li>
+          <a href={`/rendu-dynamique-stocks/${symbol.toLowerCase()}/`} class="block border border-[#35584f] bg-[#11241f] p-6 transition hover:-translate-y-1 hover:border-[#7ee0c3]">
+            <span class="text-2xl font-bold text-[#fff8f5]">{symbol}</span>
+            <span class="mt-3 block text-sm text-[#c6ddd6]">Voir le graphique →</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </main>
+</Layout>

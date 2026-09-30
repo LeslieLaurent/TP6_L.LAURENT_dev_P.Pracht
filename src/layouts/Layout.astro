@@ -1,26 +1,346 @@
 ---
 import "../styles/global.css";
+
+interface Props {
+  title?: string;
+}
+
+const {
+  title = "Observable Plot — TP4"
+} = Astro.props;
+
+const currentPath = Astro.url.pathname;
+
+const navigation = [
+  {
+    label: "Accueil",
+    shortLabel: "Accueil",
+    href: "/"
+  },
+  {
+    label: "Rendu dynamique",
+    shortLabel: "Dynamique",
+    href: "/rendu-dynamique/"
+  },
+  {
+    label: "Rendu statique",
+    shortLabel: "Statique",
+    href: "/rendu-statique/"
+  }
+];
+
+const isActive = (href: string) =>
+  currentPath === href;
 ---
 
 <!doctype html>
-<html lang="en">
+
+<html lang="fr">
+
   <head>
+
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Astro Basics</title>
+
+    <meta
+      name="viewport"
+      content="width=device-width"
+    />
+
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/favicon.svg"
+    />
+
+    <meta
+      name="generator"
+      content={Astro.generator}
+    />
+
+    <meta
+      name="description"
+      content="TP4 Astro et Observable Plot — graphiques interactifs côté client."
+    />
+
+    <title>{title}</title>
+
   </head>
-  <body>
-    <slot />
+
+  <body
+    class="min-h-screen bg-[#0d090c] text-[#fff8f5]"
+  >
+
+    <a
+      href="#contenu"
+      class="fixed left-4 top-4 z-[100]
+             -translate-y-24
+             rounded-lg
+             bg-[#fff8f5]
+             px-4 py-3
+             font-bold
+             text-[#0d090c]
+             transition
+             focus:translate-y-0"
+    >
+      Aller au contenu
+    </a>
+
+
+    <header
+      class="sticky top-0 z-50
+             border-b border-[#4d3039]
+             bg-[#0d090c]/95
+             backdrop-blur-xl"
+    >
+
+      <div
+        class="mx-auto flex max-w-7xl
+               items-center justify-between
+               gap-6 px-6 py-4
+               lg:px-10"
+      >
+
+        <a
+          href="/"
+          class="flex shrink-0
+                 items-center gap-3"
+        >
+
+          <span
+            class="flex h-10 w-10
+                   items-center justify-center
+                   rounded-lg
+                   bg-[#ff9bb2]
+                   text-xs font-black
+                   text-[#0d090c]"
+          >
+            TP4
+          </span>
+
+          <span class="hidden xl:block">
+
+            <span
+              class="block text-sm
+                     font-bold text-[#fff8f5]"
+            >
+              Observable Plot
+            </span>
+
+            <span
+              class="block text-[10px]
+                     font-bold uppercase
+                     tracking-[0.16em]
+                     text-[#cbb8be]"
+            >
+              Client side
+            </span>
+
+          </span>
+
+        </a>
+
+
+        <nav
+          aria-label="Navigation principale"
+          class="hidden items-center
+                 gap-1 lg:flex"
+        >
+
+          {
+            navigation.map((item) => (
+              <a
+                href={item.href}
+                aria-current={
+                  isActive(item.href)
+                    ? "page"
+                    : undefined
+                }
+                class:list={[
+                  "rounded-lg px-3 py-2 text-sm font-bold transition",
+                  isActive(item.href)
+                    ? "bg-[#ff9bb2] text-[#0d090c]"
+                    : "text-[#d9c9ce] hover:bg-[#21131b] hover:text-[#fff8f5]"
+                ]}
+              >
+                {item.shortLabel}
+              </a>
+            ))
+          }
+
+        </nav>
+
+
+        <details class="group relative lg:hidden">
+
+          <summary
+            class="flex cursor-pointer
+                   list-none items-center
+                   gap-2 rounded-lg
+                   border border-[#704052]
+                   bg-[#21131b]
+                   px-4 py-2
+                   text-sm font-bold
+                   text-[#fff8f5]
+                   transition
+                   hover:border-[#ff9bb2]"
+          >
+            Menu
+
+            <span
+              aria-hidden="true"
+              class="text-xs transition
+                     group-open:rotate-180"
+            >
+              ↓
+            </span>
+          </summary>
+
+
+          <nav
+            aria-label="Navigation mobile"
+            class="absolute right-0 top-full
+                   mt-3 w-[min(22rem,88vw)]
+                   overflow-hidden rounded-xl
+                   border border-[#704052]
+                   bg-[#160e12]
+                   p-2 shadow-2xl"
+          >
+
+            <p
+              class="px-3 pb-3 pt-2
+                     text-[10px] font-bold
+                     uppercase
+                     tracking-[0.18em]
+                     text-[#ff9bb2]"
+            >
+              Navigation TP4
+            </p>
+
+            {
+              navigation.map((item) => (
+                <a
+                  href={item.href}
+                  aria-current={
+                    isActive(item.href)
+                      ? "page"
+                      : undefined
+                  }
+                  class:list={[
+                    "block rounded-lg px-4 py-3 text-sm font-bold transition",
+                    isActive(item.href)
+                      ? "bg-[#321b24] text-[#ff9bb2]"
+                      : "text-[#fff8f5] hover:bg-[#21131b]"
+                  ]}
+                >
+                  {item.label}
+                </a>
+              ))
+            }
+
+          </nav>
+
+        </details>
+
+      </div>
+
+
+      <div
+        class="h-px
+               bg-gradient-to-r
+               from-transparent
+               via-[#ff9bb2]/50
+               to-transparent"
+      >
+      </div>
+
+    </header>
+
+
+    <div
+      id="contenu"
+      tabindex="-1"
+    >
+      <slot />
+    </div>
+
+
+    <footer
+      class="mt-16
+             border-t border-[#4d3039]"
+    >
+
+      <div
+        class="mx-auto flex max-w-7xl
+               flex-col gap-4
+               px-6 py-8
+               text-sm text-[#cbb8be]
+               sm:flex-row
+               sm:items-center
+               sm:justify-between
+               lg:px-10"
+      >
+
+        <div>
+
+          <p
+            class="font-bold
+                   text-[#fff8f5]"
+          >
+            TP4 · Observable Plot
+          </p>
+
+          <p class="mt-1">
+            Graphiques interactifs côté client avec Astro.
+          </p>
+
+        </div>
+
+        <a
+          href="/"
+          class="font-bold
+                 text-[#ff9bb2]
+                 transition
+                 hover:text-[#ffd0db]"
+        >
+          Retour au sommaire ↑
+        </a>
+
+      </div>
+
+    </footer>
+
   </body>
+
 </html>
+
 
 <style>
   html,
   body {
     margin: 0;
     width: 100%;
-    height: 100%;
+    min-height: 100%;
+  }
+
+  body {
+    background: #0d090c;
+    color: #fff8f5;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  :global(a:focus-visible),
+  :global(button:focus-visible),
+  :global(select:focus-visible),
+  :global(summary:focus-visible),
+  :global([tabindex]:focus-visible) {
+    outline: 3px solid #ff9bb2;
+    outline-offset: 4px;
+  }
+
+  :global(select) {
+    color-scheme: dark;
   }
 </style>

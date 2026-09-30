@@ -1,0 +1,620 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Stocks avec plusieurs filtres — Observable Plot">
+
+  <main class="mx-auto max-w-7xl px-6 py-12 lg:px-12 lg:py-16">
+
+    <a
+      href="/"
+      class="inline-block text-sm font-bold
+             text-[#7ee0c3]
+             transition hover:text-[#b8f4e3]"
+    >
+      ← Retour à l'accueil
+    </a>
+
+    <header class="max-w-4xl pt-16 pb-12">
+
+      <p
+        class="mb-4 text-xs font-bold uppercase
+               tracking-[0.22em] text-[#7ee0c3]"
+      >
+        Essai 06 — Plusieurs filtres
+      </p>
+
+      <h1
+        class="text-5xl font-bold
+               leading-tight tracking-[-0.03em]
+               text-[#fff8f5]
+               md:text-7xl"
+      >
+        Stocks
+      </h1>
+
+      <p
+        class="mt-5 max-w-2xl
+               text-lg leading-8
+               text-[#e4d7db]"
+      >
+        Explore l'évolution des cours boursiers
+        selon l'entreprise, la période
+        et la fourchette de prix.
+      </p>
+
+    </header>
+
+
+    <section
+      class="border-y border-[#35584f]
+             py-7"
+    >
+
+      <div
+        class="grid gap-6
+               md:grid-cols-2
+               lg:grid-cols-[1fr_1fr_1fr_auto]
+               lg:items-end"
+      >
+
+        <div>
+
+          <label
+            for="symbol"
+            class="mb-2 block
+                   text-xs font-bold uppercase
+                   tracking-[0.15em]
+                   text-[#c6ddd6]"
+          >
+            Entreprise
+          </label>
+
+          <select
+            id="symbol"
+            class="w-full rounded-lg
+                   border border-[#4f8073]
+                   bg-[#11241f]
+                   px-4 py-3
+                   text-[#fff8f5]
+                   transition
+                   hover:border-[#7ee0c3]
+                   focus:border-[#7ee0c3]"
+          >
+            <option value="">
+              Toutes les entreprises
+            </option>
+
+            <option value="AAPL">
+              Apple
+            </option>
+
+            <option value="AMZN">
+              Amazon
+            </option>
+
+            <option value="GOOG">
+              Google
+            </option>
+
+            <option value="IBM">
+              IBM
+            </option>
+
+            <option value="MSFT">
+              Microsoft
+            </option>
+          </select>
+
+        </div>
+
+
+        <div>
+
+          <label
+            for="period"
+            class="mb-2 block
+                   text-xs font-bold uppercase
+                   tracking-[0.15em]
+                   text-[#c6ddd6]"
+          >
+            Période
+          </label>
+
+          <select
+            id="period"
+            class="w-full rounded-lg
+                   border border-[#4f8073]
+                   bg-[#11241f]
+                   px-4 py-3
+                   text-[#fff8f5]
+                   transition
+                   hover:border-[#7ee0c3]
+                   focus:border-[#7ee0c3]"
+          >
+            <option value="">
+              Toutes les périodes
+            </option>
+
+            <option value="2000-2003">
+              2000 — 2003
+            </option>
+
+            <option value="2004-2006">
+              2004 — 2006
+            </option>
+
+            <option value="2007-2010">
+              2007 — 2010
+            </option>
+          </select>
+
+        </div>
+
+
+        <div>
+
+          <label
+            for="price"
+            class="mb-2 block
+                   text-xs font-bold uppercase
+                   tracking-[0.15em]
+                   text-[#c6ddd6]"
+          >
+            Prix
+          </label>
+
+          <select
+            id="price"
+            class="w-full rounded-lg
+                   border border-[#4f8073]
+                   bg-[#11241f]
+                   px-4 py-3
+                   text-[#fff8f5]
+                   transition
+                   hover:border-[#7ee0c3]
+                   focus:border-[#7ee0c3]"
+          >
+            <option value="">
+              Tous les prix
+            </option>
+
+            <option value="under-50">
+              Moins de 50
+            </option>
+
+            <option value="50-100">
+              Entre 50 et 100
+            </option>
+
+            <option value="over-100">
+              Plus de 100
+            </option>
+          </select>
+
+        </div>
+
+
+        <div
+          class="border-l-0 border-[#35584f]
+                 lg:border-l lg:pl-8"
+        >
+
+          <p
+            class="text-xs font-bold uppercase
+                   tracking-[0.15em]
+                   text-[#c6ddd6]"
+          >
+            Résultats
+          </p>
+
+          <p
+            id="result-count"
+            class="mt-1 text-3xl font-bold
+                   text-[#7ee0c3]"
+            aria-live="polite"
+          >
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="pt-12">
+
+      <div
+        class="mb-6 flex flex-col gap-3
+               md:flex-row
+               md:items-end
+               md:justify-between"
+      >
+
+        <div>
+
+          <p
+            class="text-xs font-bold uppercase
+                   tracking-[0.18em]
+                   text-[#7ee0c3]"
+          >
+            Visualisation
+          </p>
+
+          <h2
+            class="mt-2 text-2xl font-bold
+                   text-[#fff8f5]"
+          >
+            Évolution du cours des actions
+          </h2>
+
+        </div>
+
+        <p
+          class="max-w-sm text-sm
+                 leading-6 text-[#c6ddd6]"
+        >
+          Chaque courbe représente une entreprise.
+          Les trois filtres peuvent être combinés.
+        </p>
+
+      </div>
+
+
+      <div
+        class="overflow-hidden
+               rounded-xl
+               bg-[#f5f7f6]
+               p-4
+               md:p-8"
+      >
+
+        <div
+          id="plot"
+          class="overflow-x-auto"
+        >
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <script>
+    import * as Plot from "@observablehq/plot";
+    import stocksCsv from "../assets/stocks.csv?raw";
+
+    const selectSymbol =
+      document.querySelector<HTMLSelectElement>(
+        "#symbol"
+      );
+
+    const selectPeriod =
+      document.querySelector<HTMLSelectElement>(
+        "#period"
+      );
+
+    const selectPrice =
+      document.querySelector<HTMLSelectElement>(
+        "#price"
+      );
+
+    const div =
+      document.querySelector<HTMLElement>(
+        "#plot"
+      );
+
+    const resultCount =
+      document.querySelector<HTMLElement>(
+        "#result-count"
+      );
+
+
+    const lines =
+      stocksCsv
+        .trim()
+        .split(/\r?\n/);
+
+
+    const stocks =
+      lines
+        .slice(1)
+        .map((line) => {
+
+          const [
+            symbol,
+            date,
+            price
+          ] =
+            line.split(",");
+
+          return {
+            symbol: symbol.trim(),
+            date: new Date(date.trim()),
+            price: Number(price.trim())
+          };
+
+        })
+        .filter(
+          (stock) =>
+            stock.symbol &&
+            !Number.isNaN(
+              stock.date.getTime()
+            ) &&
+            Number.isFinite(
+              stock.price
+            )
+        );
+
+
+    function matchesPeriod(
+      year: number,
+      period: string
+    ) {
+
+      if (period === "") {
+        return true;
+      }
+
+      if (period === "2000-2003") {
+        return year >= 2000 && year <= 2003;
+      }
+
+      if (period === "2004-2006") {
+        return year >= 2004 && year <= 2006;
+      }
+
+      if (period === "2007-2010") {
+        return year >= 2007 && year <= 2010;
+      }
+
+      return true;
+    }
+
+
+    function matchesPrice(
+      price: number,
+      range: string
+    ) {
+
+      if (range === "") {
+        return true;
+      }
+
+      if (range === "under-50") {
+        return price < 50;
+      }
+
+      if (range === "50-100") {
+        return price >= 50 && price <= 100;
+      }
+
+      if (range === "over-100") {
+        return price > 100;
+      }
+
+      return true;
+    }
+
+
+    function renderPlot() {
+
+      if (
+        !selectSymbol ||
+        !selectPeriod ||
+        !selectPrice ||
+        !div
+      ) {
+        return;
+      }
+
+
+      const symbol =
+        selectSymbol.value;
+
+      const period =
+        selectPeriod.value;
+
+      const priceRange =
+        selectPrice.value;
+
+
+      const filteredStocks =
+        stocks.filter(
+          (stock) => {
+
+            const year =
+              stock.date.getFullYear();
+
+            const symbolMatches =
+              symbol === "" ||
+              stock.symbol === symbol;
+
+            const periodMatches =
+              matchesPeriod(
+                year,
+                period
+              );
+
+            const priceMatches =
+              matchesPrice(
+                stock.price,
+                priceRange
+              );
+
+            return (
+              symbolMatches &&
+              periodMatches &&
+              priceMatches
+            );
+
+          }
+        );
+
+
+      if (resultCount) {
+        resultCount.innerText =
+          filteredStocks.length.toString();
+      }
+
+
+      div.innerHTML = "";
+
+
+      const width =
+        Math.max(
+          700,
+          Math.min(
+            1100,
+            div.clientWidth
+          )
+        );
+
+
+      const plot =
+        Plot.plot({
+
+          width,
+
+          height: 520,
+
+          marginTop: 40,
+          marginRight: 40,
+          marginBottom: 65,
+          marginLeft: 75,
+
+          style: {
+            background: "transparent",
+            color: "#18241f",
+            fontSize: "13px"
+          },
+
+          color: {
+            legend: true
+          },
+
+          x: {
+            label: "Date",
+            grid: true
+          },
+
+          y: {
+            label: "Prix",
+            grid: true,
+            nice: true
+          },
+
+          marks: [
+
+            Plot.line(
+              stocks,
+              {
+                filter: (stock) => {
+
+                  const year =
+                    stock.date.getFullYear();
+
+                  return (
+                    (
+                      symbol === "" ||
+                      stock.symbol === symbol
+                    ) &&
+                    matchesPeriod(
+                      year,
+                      period
+                    ) &&
+                    matchesPrice(
+                      stock.price,
+                      priceRange
+                    )
+                  );
+
+                },
+
+                x: "date",
+
+                y: "price",
+
+                stroke: "symbol",
+
+                strokeWidth: 2.5
+              }
+            ),
+
+
+            Plot.dot(
+              stocks,
+              {
+                filter: (stock) => {
+
+                  const year =
+                    stock.date.getFullYear();
+
+                  return (
+                    (
+                      symbol === "" ||
+                      stock.symbol === symbol
+                    ) &&
+                    matchesPeriod(
+                      year,
+                      period
+                    ) &&
+                    matchesPrice(
+                      stock.price,
+                      priceRange
+                    )
+                  );
+
+                },
+
+                x: "date",
+
+                y: "price",
+
+                fill: "symbol",
+
+                r: 3,
+
+                title: (stock) =>
+                  `${stock.symbol}
+${stock.date.toLocaleDateString("fr-FR", {
+                    month: "long",
+                    year: "numeric"
+                  })}
+${stock.price}`
+              }
+            )
+
+          ]
+
+        });
+
+
+      div.append(plot);
+
+    }
+
+
+    selectSymbol?.addEventListener(
+      "change",
+      renderPlot
+    );
+
+    selectPeriod?.addEventListener(
+      "change",
+      renderPlot
+    );
+
+    selectPrice?.addEventListener(
+      "change",
+      renderPlot
+    );
+
+
+    renderPlot();
+  </script>
+
+</Layout>

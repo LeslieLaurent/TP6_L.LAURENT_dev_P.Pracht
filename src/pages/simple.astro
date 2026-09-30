@@ -1,0 +1,92 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Simple — Observable Plot">
+
+  <main class="mx-auto max-w-6xl px-6 py-16">
+
+    <a
+      href="/"
+      class="font-medium text-[#d06a80]
+             focus-visible:outline
+             focus-visible:outline-4
+             focus-visible:outline-offset-4
+             focus-visible:outline-[#d06a80]"
+    >
+      ← Retour à l'accueil
+    </a>
+
+    <section class="py-16">
+
+      <p
+        class="text-sm font-bold uppercase
+               tracking-[0.2em] text-[#d06a80]"
+      >
+        Essai 01
+      </p>
+
+      <h1
+        class="mt-4 text-5xl font-bold
+               text-[#f4e9e3]"
+      >
+        Simple
+      </h1>
+
+      <p
+        class="mt-5 max-w-2xl
+               leading-7 text-[#c2aeb3]"
+      >
+        Premier graphique Observable Plot
+        généré directement côté client.
+      </p>
+
+    </section>
+
+    <div
+      id="plot"
+      class="overflow-hidden rounded-3xl
+             border border-[#4b2936]
+             bg-[#21131b] p-6"
+    >
+    </div>
+
+  </main>
+
+  <script>
+    import * as Plot from "@observablehq/plot";
+
+    const div =
+      document.querySelector<HTMLElement>(
+        "#plot"
+      );
+
+    if (div) {
+      const plot =
+        Plot.rectY(
+          {
+            length: 10000
+          },
+          Plot.binX(
+            {
+              y: "count"
+            },
+            {
+              x: Math.random
+            }
+          )
+        ).plot({
+          width: 900,
+          height: 500,
+
+          style: {
+            background: "transparent",
+            color: "#f4e9e3"
+          }
+        });
+
+      div.append(plot);
+    }
+  </script>
+
+</Layout>

@@ -1,0 +1,49 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import PlotFigure from "../../components/PlotFigure.astro";
+import * as Plot from "@observablehq/plot";
+import cars from "../../assets/cars.json";
+
+export function getStaticPaths() {
+  const years = [...new Set(cars.map((car) => new Date(car.Year).getFullYear()))].sort((a, b) => a - b);
+
+  return years.map((year) => ({
+    params: { year: year.toString() },
+    props: { selectedYear: year }
+  }));
+}
+
+const { selectedYear } = Astro.props;
+const filteredCars = cars.filter((car) => new Date(car.Year).getFullYear() === selectedYear);
+
+const plotOptions = {
+  height: 520,
+  grid: true,
+  style: { background: "transparent", color: "#fff8f5" },
+  x: { label: "Poids (lb)" },
+  y: { label: "Puissance (hp)" },
+  marks: [
+    Plot.dot(filteredCars, {
+      x: "Weight_in_lbs",
+      y: "Horsepower",
+      fill: "#7ee0c3",
+      r: 5,
+      fillOpacity: 0.8
+    })
+  ]
+};
+---
+
+<Layout title={`Cars ${selectedYear} — Rendu statique`}>
+  <main class="mx-auto max-w-6xl px-6 py-12 lg:py-16">
+    <a href="/rendu-statique-cars/" class="text-sm font-bold text-[#7ee0c3]">← Toutes les années</a>
+    <header class="py-16">
+      <p class="mb-4 text-xs font-bold uppercase tracking-[0.22em] text-[#7ee0c3]">Rendu statique</p>
+      <h1 class="text-5xl font-bold text-[#fff8f5] md:text-7xl">Cars {selectedYear}</h1>
+      <p class="mt-5 text-lg text-[#e6d6da]">{filteredCars.length} voiture(s) trouvée(s) pour cette année.</p>
+    </header>
+    <div class="overflow-hidden rounded-2xl border border-[#355c50] bg-[#12221d] p-5">
+      <PlotFigure options={plotOptions} />
+    </div>
+  </main>
+</Layout>

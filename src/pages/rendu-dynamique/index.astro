@@ -1,0 +1,29 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import penguins from "../../assets/penguins.json";
+
+const species = [...new Set(penguins.map((penguin) => penguin.species))];
+---
+
+<Layout title="Rendu dynamique — Penguins">
+  <main class="mx-auto max-w-5xl px-6 py-12 lg:py-16">
+    <a href="/" class="text-sm font-bold text-[#ff9bb2] transition hover:text-[#ffd0db]">← Retour à l'accueil</a>
+    <header class="py-16">
+      <p class="mb-4 text-xs font-bold uppercase tracking-[0.22em] text-[#ff9bb2]">Routes paramétriques</p>
+      <h1 class="text-5xl font-bold text-[#fff8f5] md:text-7xl">Rendu dynamique</h1>
+      <p class="mt-5 max-w-2xl text-lg leading-8 text-[#e6d6da]">
+        Choisis une espèce : sa page est rendue à la demande avec <code>Astro.params</code>.
+      </p>
+    </header>
+    <ul class="grid gap-4 sm:grid-cols-3">
+      {species.map((currentSpecies) => (
+        <li>
+          <a href={`/rendu-dynamique/${currentSpecies.toLowerCase()}/`} class="block border border-[#704052] bg-[#21131b] p-6 transition hover:-translate-y-1 hover:border-[#ff9bb2]">
+            <span class="text-2xl font-bold text-[#fff8f5]">{currentSpecies}</span>
+            <span class="mt-3 block text-sm text-[#cbb8be]">Voir le graphique →</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </main>
+</Layout>

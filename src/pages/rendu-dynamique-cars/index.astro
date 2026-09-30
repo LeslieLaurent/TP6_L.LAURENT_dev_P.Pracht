@@ -1,0 +1,31 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import cars from "../../assets/cars.json";
+
+const years = [...new Set(cars.map((car) => new Date(car.Year).getFullYear()))].sort((a, b) => a - b);
+---
+
+<Layout title="Cars — Rendu dynamique">
+  <main class="mx-auto max-w-5xl px-6 py-12 lg:py-16">
+    <a href="/" class="text-sm font-bold text-[#8fd3ff] transition hover:text-[#c7eaff]">← Retour à l'accueil</a>
+
+    <header class="py-16">
+      <p class="mb-4 text-xs font-bold uppercase tracking-[0.22em] text-[#8fd3ff]">Routes paramétriques</p>
+      <h1 class="text-5xl font-bold text-[#fff8f5] md:text-7xl">Cars — rendu dynamique</h1>
+      <p class="mt-5 max-w-2xl text-lg leading-8 text-[#e6d6da]">
+        Choisis une année : la page est rendue à la demande avec <code>Astro.params</code>.
+      </p>
+    </header>
+
+    <ul class="grid gap-4 sm:grid-cols-3">
+      {years.map((year) => (
+        <li>
+          <a href={`/rendu-dynamique-cars/${year}/`} class="block border border-[#3d4f5b] bg-[#14212a] p-6 transition hover:-translate-y-1 hover:border-[#8fd3ff]">
+            <span class="text-2xl font-bold text-[#fff8f5]">{year}</span>
+            <span class="mt-3 block text-sm text-[#c4d6e2]">Voir le graphique →</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </main>
+</Layout>

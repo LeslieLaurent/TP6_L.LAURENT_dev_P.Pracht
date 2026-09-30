@@ -1,0 +1,47 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import PlotFigure from "../../components/PlotFigure.astro";
+import * as Plot from "@observablehq/plot";
+import penguins from "../../assets/penguins.json";
+
+export const prerender = false;
+
+const { species } = Astro.params;
+const selectedSpecies = penguins.find((penguin) => penguin.species.toLowerCase() === species?.toLowerCase())?.species;
+const filteredPenguins = penguins.filter((penguin) => penguin.species === selectedSpecies);
+
+if (!selectedSpecies) {
+  return Astro.redirect("/rendu-dynamique/");
+}
+
+const plotOptions = {
+  height: 520,
+  grid: true,
+  style: { background: "transparent", color: "#fff8f5" },
+  x: { label: "Longueur du bec (mm)" },
+  y: { label: "Profondeur du bec (mm)" },
+  marks: [
+    Plot.dot(filteredPenguins, {
+      x: "culmen_length_mm",
+      y: "culmen_depth_mm",
+      fill: "#ff9bb2",
+      r: 5,
+      fillOpacity: 0.8
+    })
+  ]
+};
+---
+
+<Layout title={`${selectedSpecies} — Rendu dynamique`}>
+  <main class="mx-auto max-w-6xl px-6 py-12 lg:py-16">
+    <a href="/rendu-dynamique/" class="text-sm font-bold text-[#ff9bb2]">← Toutes les espèces</a>
+    <header class="py-16">
+      <p class="mb-4 text-xs font-bold uppercase tracking-[0.22em] text-[#ff9bb2]">Rendu dynamique</p>
+      <h1 class="text-5xl font-bold text-[#fff8f5] md:text-7xl">{selectedSpecies}</h1>
+      <p class="mt-5 text-lg text-[#e6d6da]">{filteredPenguins.length} individus trouvés pour cette espèce.</p>
+    </header>
+    <div class="overflow-hidden rounded-2xl border border-[#4b2936] bg-[#21131b] p-5">
+      <PlotFigure options={plotOptions} />
+    </div>
+  </main>
+</Layout>
